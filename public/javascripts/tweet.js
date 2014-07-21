@@ -27,6 +27,7 @@ function Tweet(iComparison, iSet, tweet, tweetNum) {
     } else if (lookupWord == undefined) {
       lookupWord = { "count" : 1, "sets" : this.set.name, "tweets": [], "firstWord": this.comparison.words.length, "secondSet": undefined};
       lookupWord.tweets.push(tweetLocation);
+      console.log(tweetLocation);
       this.comparison.words.push(new Word(tmpWords[i], this.set.name, tweetNum, true, lookupWord.firstWord, lookupWord.secondSet, this.comparison.words.length));
 
     } else {
