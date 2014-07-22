@@ -36,6 +36,8 @@ function emptyViewItems(){
 	// Clear current content div.
 	$("#content").empty();
 	//
+	$("#canvasBg").empty();
+	//
 	$("#tweetBubble1").empty();
 	$("#tweetBubble2").empty();
 	$("#tweetBubble3").empty();
@@ -128,11 +130,11 @@ function NonUnionSet2Filter(element) {
 }
 
 function unionFilter(element) {
-  return element.union == true && element.visible == true;
+  return element.union == true && element.unionViz == true;
 }
 
 function unionVizFilter(element) {
-  return element.union == true && element.visible == false;
+  return element.union == true && element.unionViz == false;
 }
 
 function zeroVisFilter(element) {

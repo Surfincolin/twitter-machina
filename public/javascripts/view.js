@@ -54,6 +54,8 @@ function listView(){
 
 	// Populate it.
 	$.each(cgApp.curComparison.words, function(key, value) {
+			value.circlePosition.left = 530;
+	    value.circlePosition.top = 0;
 		if (value.linkedSets == "set1") {
 				$("#canvasBg").append('<span id="word'+ key +'"  onclick="wordClick(\'' + value.value + '\');" class="tword" style="display: none;">' + value.value + '</span>');
 				value.pixelWidth = $('#word' + key).width();
@@ -99,25 +101,8 @@ function listView(){
 function initialTweetBubblesView() {
 	$("#state_title").html("Finally, what words do both of them use?");
 
-/*
-	// Add the HTML structure to be populated.
-	$("<div id='bubbleView'>" +
-			"<div class='row'>" +
-				"<div class='col-lg-10 col-md-offset-1'>" +
-					"<div id='bubbleContainer'>" +									// this is the full 10 columns wide
-						"<div id='bubbleSubcontainer'>" +							// this is a manual way to have a smaller div within bubbleContainer to simulate padding, which we can't do with absolutely positioned words like we have. Make this slightly smaller than bubbleContainer.
-							"<div id='tweetBubble1' class='tweetBubble'></div>" +
-							"<div id='tweetBubble2' class='tweetBubble'></div>" +
-						"</div>" +
-					"</div>" +
-					"<div id='bubbleContainerBg'></div>" +
-				"</div>" +
-			"</div>" +
-		"</div>")
-		.insertBefore("#listView");
-*/
 
-	
+	// Add the HTML structure to be populated.
 
 
 	//Bubble Area Count
@@ -127,25 +112,21 @@ function initialTweetBubblesView() {
 	// Preperations fot absolute positioning.
 	$.each(cgApp.curComparison.words, function(key, value) {
 		value.startPosition = $("#word" + key).position();
-		value.pixelWidth = $('#word'+key).width();
+		//value.pixelWidth = $('#word'+key).width();
 		value.selfRef = key;
-		if (value.linkedSets == "set1") {
-			if (cgApp.curComparison.sets[0].tweets[this.linkedTweet].height == 0) {
-				cgApp.curComparison.sets[0].tweets[this.linkedTweet].height = $("#list1 #tweet" + this.linkedTweet).innerHeight();
-				console.log("tweet-" + this.linkedTweet + " height=" + cgApp.curComparison.sets[0].tweets[this.linkedTweet].height);
-			}
-			$("#list1 #tweet" + this.linkedTweet).attr({style: "height: " +	cgApp.curComparison.sets[0].tweets[this.linkedTweet].height + "px"});
-		} else {
-			if (cgApp.curComparison.sets[1].tweets[this.linkedTweet].height == 0) {
-				cgApp.curComparison.sets[1].tweets[this.linkedTweet].height = $("#list2 #tweet" + this.linkedTweet).innerHeight();
-				console.log("tweet-" + this.linkedTweet + " height=" + cgApp.curComparison.sets[1].tweets[this.linkedTweet].height);
-			}
-			$("#list2 #tweet" + this.linkedTweet).attr({style: "height: " +	cgApp.curComparison.sets[1].tweets[this.linkedTweet].height + "px"});
-		}
+		// if (value.linkedSets == "set1") {
+		// 	if (cgApp.curComparison.sets[0].tweets[this.linkedTweet].height == 0) {
+		// 		cgApp.curComparison.sets[0].tweets[this.linkedTweet].height = $("#list1 #tweet" + this.linkedTweet).innerHeight();
+		// 	}
+		// 	$("#list1 #tweet" + this.linkedTweet).attr({style: "height: " +	cgApp.curComparison.sets[0].tweets[this.linkedTweet].height + "px"});
+		// } else {
+		// 	if (cgApp.curComparison.sets[1].tweets[this.linkedTweet].height == 0) {
+		// 		cgApp.curComparison.sets[1].tweets[this.linkedTweet].height = $("#list2 #tweet" + this.linkedTweet).innerHeight();
+		// 	}
+		// 	$("#list2 #tweet" + this.linkedTweet).attr({style: "height: " +	cgApp.curComparison.sets[1].tweets[this.linkedTweet].height + "px"});
+		// }
 	});
 	
-	// Fade in the canvas background for word animation.
-	//$("#canvasBg").fadeIn();
 
 	// Populate it.
 	$.each(cgApp.curComparison.words, function(key, value){
@@ -188,8 +169,8 @@ function initialTweetBubblesView() {
 	console.log("-*-*-*-*- Begin packCircle -*-*-*-*-");
 	var positioning = $('#canvasBg').width();
 	console.log(positioning);
-	circlePack(cgApp.curComparison.words.filter(set1Filter), bA1*16, positioning*.2, 200);
-	circlePack(cgApp.curComparison.words.filter(set2Filter), bA2*16, positioning*.8, 200);
+	circlePack(cgApp.curComparison.words.filter(set1Filter), bA1*16, positioning*.25*1, 200);
+	circlePack(cgApp.curComparison.words.filter(set2Filter), bA2*16, positioning*.25*3, 200);
 
 	$.each(cgApp.curComparison.words.filter(zeroVisFilter), function(key, value){
 		
@@ -240,16 +221,16 @@ function unionTweetBubblesView(){
 		    	cgApp.curComparison.words[key].union = true;
 		    	if (cgApp.curComparison.words[key].linkedSets == "set1") bA1 -= cgApp.curComparison.words[key].pixelWidth;
 					if (cgApp.curComparison.words[key].linkedSets == "set2") bA2 -= cgApp.curComparison.words[key].pixelWidth;
-
+					value.unionViz = true;
 		    	unionCount[cgApp.curComparison.words[key].value] = true;
 		    	$(id).addClass("union");
 
 	    	} else {
 	    		//Hide the Duplicates
-	    		value.visible = false;
+	    		//value.unionViz = false;
 	    		cgApp.curComparison.words[key].union = true;
-		    	if (cgApp.curComparison.words[key].linkedSets == "set1") bA1 = bA1 - cgApp.curComparison.words[key].pixelWidth;
-					if (cgApp.curComparison.words[key].linkedSets == "set2") bA2 = bA2 - cgApp.curComparison.words[key].pixelWidth;
+		    	if (cgApp.curComparison.words[key].linkedSets == "set1") bA1 -= cgApp.curComparison.words[key].pixelWidth;
+					if (cgApp.curComparison.words[key].linkedSets == "set2") bA2 -= cgApp.curComparison.words[key].pixelWidth;
     		}
     	} 		
 	});
@@ -257,15 +238,15 @@ function unionTweetBubblesView(){
 	console.log("-*-*-*-*- Begin Middle packCircle -*-*-*-*-");
 	var positioning = $('#canvasBg').width();
 	console.log(positioning);
-	circlePack(cgApp.curComparison.words.filter(unionFilter), bA3*15, positioning*.5, 200);
+	circlePack(cgApp.curComparison.words.filter(unionFilter), bA3*17, positioning*.5, 200);
 
 	$.each(cgApp.curComparison.words.filter(unionVizFilter), function(key, value){
 			animateToDuplicate(value, key, cgApp.curComparison.words[value.firstPairLocation].circlePosition);
 	});
 	
 	console.log(cgApp.curComparison.words.filter(NonUnionSet1Filter));
-	circlePack(cgApp.curComparison.words.filter(NonUnionSet1Filter), bA1*31, positioning*.2, 200);
-	circlePack(cgApp.curComparison.words.filter(NonUnionSet2Filter), bA2*35, positioning*.80, 200);
+	circlePack(cgApp.curComparison.words.filter(NonUnionSet1Filter), bA1*26, positioning*.25*1, 200);
+	circlePack(cgApp.curComparison.words.filter(NonUnionSet2Filter), bA2*26, positioning*.25*3, 200);
 
 }
 
