@@ -73,3 +73,26 @@ Dev Notes
 
 * App is read only on User’s data. We can’t post on behalf of user. We can only pull tweets.
 * When we go live, need to change app’s callback url in dev.twitter.com and in serverApp.js
+
+
+Linode Notes
+-----
+
+How to update the code on the linode:
+* in terminal: `ssh sosolimited@173.255.235.56`
+* you know the password
+* `cd /var/www/commonground/Intel-CommonGround/`
+* create new branch from dev branch, pull latest from dev branch
+* in `serverApp.js`:
+	* change the twitter consumer key and secret to those for our Live App (find keys at https://apps.twitter.com/app/).
+	* change passport's `callbackURL` to the one for the Live app (also on apps.twitter.com): `http://commonground.sosolimited.com/auth/twitter/callback`
+* hack for nginx: if not already in place, move the socket.io file to the public folder:
+	* copy `/node_modules/socket.io/node_modules/socket.io-client/socket.io.js` into `/public/javascripts/`
+	* update the script include in `app.ejs` to link to that new path in `/javascripts/`
+* start-up the app using `forever` in `/Intel-CommonGround/` (important to do this in project root, not at linode root) with: `forever start serverApp.js`
+* should work at: `http://commonground.sosolimited.com/`
+	* ERRORS:
+		* if you get an error like this: `ERROR- uncaughtException- Error: listen EADDRINUSE`
+			* make sure `forever` isn't alreay running on the linode root. Go to root (`cd .`) and see if a process is running (`forever list`). If there is one, do `forever stopall`.
+			* then run the app or `forever` in the project root instead. Always run it in the project root. Do `forever start serverApp.js`.
+
