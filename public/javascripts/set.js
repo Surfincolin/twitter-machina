@@ -12,9 +12,9 @@ function Set(iComparison, iData, iName) {
 	this.screenName = iData[0].user.screen_name;
 
 	this.listPack = {
-		"usedSpace": 0,
-		"lineCount": 0,
-		"currentTweet": 0,
+		'usedSpace': 0,
+		'lineCount': 0,
+		'currentTweet': 0,
 	};
 
 	for (var i = 0; i < iData.length; i++) {

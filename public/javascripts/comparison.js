@@ -14,19 +14,19 @@ function comparison(iId, iItem1, iItem2){
 	this.sets = [];
 	this.words = [];
 	this.lookup = {};
-	this.introHTML = "";
+	this.introHTML = '';
 	this.imageUrlItem1 = null;
 	this.imageUrlItem2 = null;
 
 	// --- Behavior
 	this.buildStateMachine();
-	this.stateMachine.gotoState("intro");
+	this.stateMachine.gotoState('intro');
 	
-	// console.log("* * * * * * * * states = ");
+	// console.log('* * * * * * * * states = ');
 	// console.log(this.stateMachine.states);
-	// console.log("* * * * * * * * transitions = ");
+	// console.log('* * * * * * * * transitions = '');
 	// console.log(this.stateMachine.transitions);
-	// console.log("* * * * * * * * curState = "+ this.stateMachine.curState.name);
+	// console.log('* * * * * * * * curState = '+ this.stateMachine.curState.name);
 
 }
 comparison.prototype = {

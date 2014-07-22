@@ -28,8 +28,6 @@ function introView(){
 function listView(){
 	$("#state_title").html("Let's compare the words that they each use");
 
-
-
 	var sets = cgApp.curComparison.sets;
 	$('#user1').html('<span class="name">' + sets[0].fullName + '</span><span class="screen_name">@' + sets[0].screenName + '</span>');
 	$('#user2').html('<span class="name">' + sets[1].fullName + '</span><span class="screen_name">@' + sets[1].screenName + '</span>');
@@ -38,28 +36,42 @@ function listView(){
 
 	// Add the HTML structure to be populated.
 	$("#content").html("<div id='canvasBg' class='col-md-10 col-md-offset-1'></div><div id='listView'>");
+		$('#listView').html("<div class='row'>" +
+													"<div class='col-lg-5 col-md-offset-1'>" +
+														"<div class='listContainer'>" +
+															// "<h2>List 1</h2>" +
+															"<div id='list1' class='tweetlist'></div>" +
+														"</div>" +
+													"</div>" +
+													"<div class='col-lg-5'>" +
+														"<div class='listContainer'>" +
+															// "<h2>List 2</h2>" +
+															"<div id='list2' class='tweetlist'></div>" +
+														"</div>" +
+													"</div>" +
+												"</div>" +
+											"</div>");
 
 	// Populate it.
 	$.each(cgApp.curComparison.words, function(key, value) {
 		if (value.linkedSets == "set1") {
-				$("#canvasBg").append('<span id="word'+ key +'" class="tword" style="display: none;">' + value.value + '</span>');
+				$("#canvasBg").append('<span id="word'+ key +'"  onclick="wordClick(\'' + value.value + '\');" class="tword" style="display: none;">' + value.value + '</span>');
 				value.pixelWidth = $('#word' + key).width();
 				// send word to listPack for positioning. (wordObj, width, set, word's key)
 				listPack(value, 503 - 30, 0, key);
 		} else if (value.linkedSets == "set2") {
-				$("#canvasBg").append('<span id="word'+ key +'" class="tword" style="display: none;">' + value.value + '</span>');
+				$("#canvasBg").append('<span id="word'+ key +'" onclick="wordClick(\'' + value.value + '\');" class="tword" style="display: none;">' + value.value + '</span>');
 				value.pixelWidth = $('#word' + key).width();
 				// send word to listPack for positioning. (wordObj, width, set, word's key)
 				listPack(value, 503 - 30, 1, key);
 		}
 	});
 
-	// Make an array of each sets lineCount and tweetCount.
-	var aLc = [cgApp.curComparison.sets[0].listPack.lineCount, cgApp.curComparison.sets[1].listPack.lineCount];
+	// Make an array of each sets tweetCount.
 	var aTc = [cgApp.curComparison.sets[0].listPack.currentTweet, cgApp.curComparison.sets[1].listPack.currentTweet];
 
-	// Take the largest lineCount and tweetCount and calculate the canvas height, then animate.
-	var maxHeight = Math.max.apply(null, aLc) * circlePackinglineHeight + Math.max.apply(null, aTc) * 30;
+	// Take the largest tweetCount and calculate the canvas height, then animate.
+	var maxHeight = Math.max.apply(null, aTc) * 52 + 30;
 	$('#canvasBg').animate({
 		height: 30 + maxHeight + 30
 	}, 1000, function() {
@@ -209,7 +221,7 @@ function unionTweetBubblesView(){
 	$("#state_title").html("Start over or choose another pair of users");
 
 	// Add the HTML structure to be populated.
-	
+
 	// Populate it.
 	var unionCount = {}; //Counting Unions
 	var bA3 = 0, //Count Union Words length
@@ -367,6 +379,35 @@ function searchButton() {
 		"input2": $("#input2").val()
 	};
 	cgApp.search(inputs);
+}
+
+function wordClick(iWord) {
+	$('#list1').html('');
+	$('#list2').html('');
+
+	var wordRegEx = new RegExp("(\\b"+ iWord + "\\b)", "g");
+	console.log("WORD!!!")
+	//this.comparison.lookup[tmpWords[i]].tweets
+	console.log(cgApp.curComparison.lookup[iWord].tweets);
+	$.each(cgApp.curComparison.lookup[iWord].tweets, function(key, value) {
+		//var splitString = string.split(/(my)/);
+		var highlightedString = "";
+		if (value.set == "set1") {
+			var tweetArray = cgApp.curComparison.sets[0].tweets[value.tweet].fullTweet.replace(wordRegEx, "<strong>$&</strong>");
+			console.log(tweetArray);
+			/*$.each(tweetArray, function(k,v) {
+				highlightedString = highlightedString + v;	
+			});
+			console.log(highlightedString);*/
+			//$('#list1').append('<p>' + cgApp.curComparison.sets[0].tweets[value.tweet].fullTweet + '</p>');
+			$('#list1').append('<p>' + tweetArray + '</p>');
+		} else {
+			var tweetArray = cgApp.curComparison.sets[1].tweets[value.tweet].fullTweet.replace(wordRegEx, "<strong>$&</strong>");
+			
+			$('#list2').append('<p>' + tweetArray + '</p>');
+		};
+	});
+
 }
 
 // 

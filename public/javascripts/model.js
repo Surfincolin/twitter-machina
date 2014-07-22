@@ -103,11 +103,10 @@ String.prototype.cleanTweet = function() {
 // Common function, to split a tweet of unwanted features.
 String.prototype.splitTweet = function() {		
 	var tweet = this;
-	// Matches punctuation. Leaves words, time ex. 2:20, p.m, 5.7, urls, and contractions.
-	var punctRegEx = new RegExp(/(?!\.\w{1,2})(?!\.\d{1,2})(?!\:\d{1,2})([^A-Za-z0-9#'\u2026]+|https?:\/\/\S+)/g);
+	// Matches punctuation. Leaves words, em dash signatures, time ex. 2:20, p.m, 5.7, urls, and contractions.
+	var punctRegEx = new RegExp(/(?!\u2014\w{1,2})(?!\.\w{1,2})(?!\.\d{1,2})(?!\:\d{1,2})([^A-Za-z0-9#'\u2026]|https?:\/\/\S+)/g);
 
 	tweet = tweet.split(punctRegEx); // remove punctuation.
-
 
 	return tweet;
 }
@@ -183,49 +182,58 @@ function linePack(id, setCount, delayCount) {
 // Tweet List Line Packing
 function listPack(iWord, iWidth, iSet, iKey) {
 
+	var punctuation = new RegExp(/(?!\.\w{1,2})(?!\.\d{1,2})(?!\:\d{1,2})([^A-Za-z0-9#@'\u2026])/g);
+
 	var	width = iWidth,
 			set = iSet,
 			padding = 30,
 			usedSpace = cgApp.curComparison.sets[set].listPack.usedSpace,
 			lineCount = cgApp.curComparison.sets[set].listPack.lineCount,
-			currentTweet = cgApp.curComparison.sets[set].listPack.currentTweet;
+			currentTweet = cgApp.curComparison.sets[set].listPack.currentTweet,
+			tweetHeight = 30;
 
 		var span = $('#word' + iKey),
 				spanWidth = iWord.pixelWidth,
 				tweet = iWord.linkedTweet;
+		
+		if (span.html() == '') {
+		
+			iWord.startPosition.left = 0;
+			iWord.startPosition.top = 0;
+			span.attr({style: "top: " +	iWord.startPosition.top + "px;left: " + iWord.startPosition.left + "px; position: absolute; display: none;"});
 
-
-		if (tweet != currentTweet) {
-			currentTweet = tweet;
-			cgApp.curComparison.sets[set].listPack.currentTweet = tweet;
-			lineCount++;
-			cgApp.curComparison.sets[set].listPack.lineCount++;
-			usedSpace = 0;
-			cgApp.curComparison.sets[set].listPack.usedSpace = 0;
-		}
-
-		if (usedSpace + spanWidth > width) {
-			console.log("used space");
-			lineCount++;
-			cgApp.curComparison.sets[set].listPack.lineCount++;
-			console.log(cgApp.curComparison.sets[set].listPack.lineCount);
-			usedSpace = 0;
-			cgApp.curComparison.sets[set].listPack.usedSpace = 0;
-		}
-
-		iWord.startPosition.left =  503*set + padding*set/2 + padding + usedSpace;
-		iWord.startPosition.top = currentTweet*padding + padding + lineCount*circlePackinglineHeight;
-		if (spanWidth == 0) {
-			usedSpace += 3;
-			cgApp.curComparison.sets[set].listPack.usedSpace += 3;
 		} else {
-			usedSpace += spanWidth;
-			cgApp.curComparison.sets[set].listPack.usedSpace += spanWidth;
+
+			if (tweet != currentTweet) {
+				currentTweet = tweet;
+				cgApp.curComparison.sets[set].listPack.currentTweet = tweet;
+				lineCount= 0;
+				cgApp.curComparison.sets[set].listPack.lineCount = 0;
+				usedSpace = 0;
+				cgApp.curComparison.sets[set].listPack.usedSpace = 0;
+			}
+
+			if (usedSpace + spanWidth > width) {
+					lineCount++;
+					cgApp.curComparison.sets[set].listPack.lineCount++;
+					usedSpace = 0;
+					cgApp.curComparison.sets[set].listPack.usedSpace = 0;
+			}
+
+			iWord.startPosition.left =  503*set + padding*set/2 + padding + usedSpace;
+			iWord.startPosition.top = currentTweet*padding*1.7 + padding + lineCount*circlePackinglineHeight;
+			if (spanWidth == 0) {
+				usedSpace += 4;
+				cgApp.curComparison.sets[set].listPack.usedSpace += 4;
+			} else {
+				usedSpace += spanWidth;
+				cgApp.curComparison.sets[set].listPack.usedSpace += spanWidth;
+			}
+
+			span.attr({style: "top: " +	iWord.startPosition.top + "px;left: " + iWord.startPosition.left + "px; position: absolute; display: none;"});
+
+			span.delay( currentTweet * 50 ).fadeIn(1000);
 		}
-
-		span.attr({style: "top: " +	iWord.startPosition.top + "px;left: " + iWord.startPosition.left + "px; position: absolute; display: none;"});
-
-		span.delay( currentTweet * 50 ).fadeIn(1000);
 }
 
 // Line Count for packing circles

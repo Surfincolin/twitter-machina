@@ -1,5 +1,5 @@
 //word exclusion array
-var exWordArray = ["the", "a", "if", "is", "on", "in", "to", "it", "of"];
+var exWordArray = ['the', 'a', 'if', 'is', 'on', 'in', 'to', 'it', 'of'];
 var wordCount = 0;
 // Creates the individual word objects.
 function Word(theWord, refSet, refTweet, vis, firstPairLoc, secondSetPairLoc, selfRef) {
@@ -14,13 +14,13 @@ function Word(theWord, refSet, refTweet, vis, firstPairLoc, secondSetPairLoc, se
 	this.pixelWidth = 0;  // Established when the word first appears in the DOM.
 	//this.count = 1;
 
-	this.startPosition = {"left": 450, "top": 300}; // For tweet list.
-	this.circlePosition = {"top": 0, "left": 600}; 		// For circle packing.
+	this.startPosition = {'left': 450, 'top': 300}; // For tweet list.
+	this.circlePosition = {'top': 0, 'left': 600}; 		// For circle packing.
 
 	//if word is in exclusion array or only one letter, set visibility to false.
 	if (exWordArray.indexOf(theWord) !== -1 || theWord.length < 2) {
 		// If capital "I" allow visibility.
-		if (theWord == "I") {
+		if (theWord == 'I') {
 			this.visible = vis;
 		} else {
 			this.visible = false;
